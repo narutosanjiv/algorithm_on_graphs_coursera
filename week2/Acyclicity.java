@@ -2,34 +2,39 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Iterator;
 
-public class Reachability {
-    private static int explore(ArrayList<Integer>[] adj, int source, int destination, int [] visited){
+public class Acyclicity {
+
+    private static int explore(ArrayList<Integer>[] adj, int source, int [] visited){
         visited[source] = 1;
-        
-        if(source == destination){
-            return 1;   
-        }
-        // Iterator to traverse the list 
+
+        // Iterator to traverse the list
         Iterator iterator = adj[source].iterator();
-        while (iterator.hasNext()){
-            int nextSource = (int)iterator.next();
-            if(visited[nextSource] == 0)
-                return explore(adj, nextSource, destination, visited);
+        while (iterator.hasNext()) {
+            int nextSource = (int) iterator.next();
+            if (visited[nextSource] == 1)
+                return 1;
+            if (visited[nextSource] == 0)
+                return explore(adj, nextSource, visited);
         }
 
         return 0;
     }
-
-    private static int reach(ArrayList<Integer>[] adj, int x, int y) {
+    private static int acyclic(ArrayList<Integer>[] adj) {
         //write your code here
+        int n=adj.length;
+        int isPath=0;
         int [] visited = new int[adj.length];
-        for (int i = 0; i < adj.length; i++) {
-            visited[i] = 0;
+    
+        for(int i=0;i < n;i++){
+            for (int j = 0; j < adj.length; j++) {
+                visited[j] = 0;
+            }
+            isPath = explore(adj, i, visited);
+            if(isPath == 1)
+                break;
         }
-        int isPath = explore(adj, x, y, visited);
         return isPath;
     }
-
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -44,10 +49,8 @@ public class Reachability {
             x = scanner.nextInt();
             y = scanner.nextInt();
             adj[x - 1].add(y - 1);
-            adj[y - 1].add(x - 1);
         }
-        int x = scanner.nextInt() - 1;
-        int y = scanner.nextInt() - 1;
-        System.out.println(reach(adj, x, y));
+        System.out.println(acyclic(adj));
     }
 }
+

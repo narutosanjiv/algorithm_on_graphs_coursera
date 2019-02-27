@@ -2,34 +2,38 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Iterator;
 
-public class Reachability {
-    private static int explore(ArrayList<Integer>[] adj, int source, int destination, int [] visited){
-        visited[source] = 1;
-        
-        if(source == destination){
-            return 1;   
-        }
+public class ConnectedComponents {
+    private static int explore(ArrayList<Integer>[] adj, int source, boolean [] visited){
+        visited[source] = true;
+
         // Iterator to traverse the list 
         Iterator iterator = adj[source].iterator();
         while (iterator.hasNext()){
             int nextSource = (int)iterator.next();
-            if(visited[nextSource] == 0)
-                return explore(adj, nextSource, destination, visited);
+            if(!visited[nextSource])
+                return explore(adj, nextSource, visited);
         }
 
         return 0;
     }
-
-    private static int reach(ArrayList<Integer>[] adj, int x, int y) {
+    
+    private static int numberOfComponents(ArrayList<Integer>[] adj) {
+        int result = 0;
         //write your code here
-        int [] visited = new int[adj.length];
+        //write your code here
+        int total_no_vertics = adj.length;
+        boolean [] visited = new boolean[total_no_vertics];
         for (int i = 0; i < adj.length; i++) {
-            visited[i] = 0;
+            visited[i] = false;
         }
-        int isPath = explore(adj, x, y, visited);
-        return isPath;
+        for(int i = 0; i < total_no_vertics; i++){
+            if(!visited[i]){
+                explore(adj, i, visited);
+                result++;
+            }
+        }
+        return result;
     }
-
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -46,8 +50,7 @@ public class Reachability {
             adj[x - 1].add(y - 1);
             adj[y - 1].add(x - 1);
         }
-        int x = scanner.nextInt() - 1;
-        int y = scanner.nextInt() - 1;
-        System.out.println(reach(adj, x, y));
+        System.out.println(numberOfComponents(adj));
     }
 }
+
