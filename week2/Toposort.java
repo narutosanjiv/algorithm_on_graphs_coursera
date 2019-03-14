@@ -1,24 +1,46 @@
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Toposort {
     private static ArrayList<Integer> toposort(ArrayList<Integer>[] adj) {
         int used[] = new int[adj.length];
         ArrayList<Integer> order = new ArrayList<Integer>();
-        //write your code here
+        int total_no_vertics = adj.length;
+        int[] visited = new int[total_no_vertics];
+        // write your code here
+        for (int i = 0; i < total_no_vertics; i++) {
+            visited[i] = 0;
+        }
+        for (int i = 0; i < total_no_vertics; i++) {
+            if (visited[i] == 0) {
+                dfs(adj, visited, order, i);
+            }
+        }
         return order;
     }
 
     private static void dfs(ArrayList<Integer>[] adj, int[] used, ArrayList<Integer> order, int s) {
-      //write your code here
+        // write your code here
+        used[s] = 1;
+
+        // Iterator to traverse the list
+        Iterator iterator = adj[s].iterator();
+        while (iterator.hasNext()) {
+            int nextSource = (int) iterator.next();
+            if (used[nextSource] == 0) {
+                dfs(adj, used, order, nextSource);
+
+            }
+        }
+        order.add(0, s);
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int n = scanner.nextInt();
         int m = scanner.nextInt();
-        ArrayList<Integer>[] adj = (ArrayList<Integer>[])new ArrayList[n];
+        ArrayList<Integer>[] adj = (ArrayList<Integer>[]) new ArrayList[n];
         for (int i = 0; i < n; i++) {
             adj[i] = new ArrayList<Integer>();
         }
@@ -34,4 +56,3 @@ public class Toposort {
         }
     }
 }
-
